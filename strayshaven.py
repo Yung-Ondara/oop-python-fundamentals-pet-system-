@@ -1,42 +1,117 @@
 #Class initialization with default __init_ method
 class Pet:
+
+    # This is a parent class
+    # This is a base class for all pets
+    def __init__(self,name,age=None):
+        #protected instance attributes
+        self.name = name
+        self.age = age
+
+#getters and setters methods for  encapsulation
+    def get_age(self):
+        print("Retrieving age")
+        return self.__age
+
+    def set_age(self,age):
+        if type(age) in (int,float) and (age >= 0 and age <= 120):
+            self.__age = age
+        else:
+            print("Age must be greater than 0 or less than 120")
+          
+
+# encapsulated age  @property
+    age = property(get_age,set_age)
+
     def speak(self):
-        #print("sound made")
-        return ("pet spoke")
+        print("sound made")
+        return ("pet spoke")  
 
-Rasmus = Pet()
-Rasmus.name = "Rasmus"
-print(Rasmus.name)
-print(Rasmus.speak())
+    def  describe(self):
+        if self.age:
+            return f"{self.name} is {self.age} years old"
+        else:
+            return f"{self.name}`s age is unknown"
 
-#A simple class to represent a dog with modified __init_
-class Dog:
+   #A simple class to represent a dog with modified __init__   
+class Dog(Pet):
 
-    species = "Canis familiaris"
+    species = "canis lupus familiaris" # class attribute
 
     def __init__(self,name,breed,age="N/A"):
-        self.name = name #instance attribute
-        self.breed = breed
-        self.age = age
-       
-    def speak(self):
-        retutn ="{self.name} says Woof!"
+        super().__init__(name, age)
+        # instance attribute
+        self.breed = breed  
 
-koba = Dog("Koba","Pitbull",3) 
-amada = Dog("Amada","Bulldog",)
-koba.age = 4 
-print(koba.speak)
-print(koba.age)
-print(amada.age)
-print(amada.species)
-print(amada.name)
+
+     # override parent's speak method
+    def speak(self):
+        return f"{self._name} says woof! woof!"
+
+#Cat is a subclass of Pet(inheritance)   
+class Cat(Pet):
+    
+    def __init__(self, name, owner, age=None):
+
+        #call parent's or superclass' initialiser method (inheritance)
+        super().__init__(name, age)
+        self._owner = owner
+
+    def speak(self):
+        return f"{self._name} meows!"
+
+    def get_owner(self):
+        return self._owner
+    
+    def set_owner(self, owner):
+        self._owner = owner
+
+    owner = property(get_owner, set_owner)
+
+
+class Rat(Pet):
+    species = "rattus norvegicus"
+
+    def __init__(self,name, owner, age=False):
+
+        super().__init__(name, age)
+        self._owner = owner
+    
+    #overriding parents speak method
+
+    def speak(self):
+        return f"{self._name} squeals!"
+
+rasmus = Pet("Scooby")
+rasmus.name = "Rasmus"
+print(rasmus.name)
+print(rasmus.speak())
+
+koba = Dog("Koba","Great Dane", 3)
+amad = Dog("amad", "Black Goat") # works because we intialised age with a default value
+koba.age = 4
+print(koba.speak())
+print(koba._age)
+print(amad._age)
+print(amad.species)
+print(amad._name)
 
 print(koba.species)
-print(koba.name)
+print(koba._name)
 
-class Cat:
-    pass
+#demonstrating encapsulation 
+print(f"Pet's age: {rasmus.age}")
+rasmus.age = 5
+print(f"Pet's new age: {rasmus.age}")
 
-class Rat:
-    pass
+#demonstrating inheritance
+whiskers = Cat("Whiskers", "Juanita", 6)
+print(whiskers.describe())
 
+#demonstrating polymorphism
+jerry = Rat("Jerry", "Abdirahman Ali", 4)
+print(rasmus.speak())
+print(koba.speak())
+print(whiskers.speak())
+print(jerry.speak())
+          
